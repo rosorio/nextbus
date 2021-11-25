@@ -10,6 +10,7 @@
     use JSON;
     use DateTime;
     use Data::Dumper;
+    my @msgline;
 
 
     my @time_array;
@@ -126,7 +127,7 @@ $stopname="carriers";
 
     my $i    = 0;
     my $honk = 0;
-    for my $dline (@timeline) {
+    for my $dline (@msgline) {
         my $label = "black";
         my $realtime = "";
         if ( $slist[$i]->{'drift'} > 4 ) {
