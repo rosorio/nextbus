@@ -143,22 +143,30 @@ $stopname="carriers";
 
         my $destination = substr("$slist[$i]->{'dest'}",0, 20);
         $destination .= ".." . " " x(24 - length($destination));
-        $dline->set_markup( ' <span font_size="'
+        $dline->{"BUS"}->set_markup(' <span font_size="'
               . $font_size
               . '" color="white" bgcolor="'
               . $colors{ $slist[$i]->{line} } . '">'
               . $slist[$i]->{line}
-              . '</span>('
-              . $slist[$i]->{'drift'}
-              . ')<span font_size="'
+              . '</span>');
+        $dline->{"DEST"}->set_markup('<span font_size="'
               . $font_size
               . '" color="'
               . $label
               . '" bgcolor="white">'
-              . " $destination"
+              .'<span font_size="'
+              . "$destination");
+
+        $dline->{"TIME"}->set_markup('<span font_size="'
+              . $font_size
+              . '" color="'
+              . $label
+              . '" bgcolor="white">'
+              .'<span font_size="'
+              . " $destination");
+        $dline->{"DEST"}->set_markup('<span font_size="'
               . $realtime
               . "</span>" );
-
         $i++;
     }
     system('/usr/local/bin/mplayer /usr/home/rodrigo/cars-passing.mp3 &')
@@ -172,7 +180,7 @@ sub updatemeteo() {
     my $icon;
     my $temp;
     my @weather;
-    my $content = get('https://api.openweathermap.org/data/2.5/weather?id=XXXXXXXXXXXXXXXXX&units=metric&lang=fr') or print 'Unable to get page';
+    my $content = get('https://api.openweathermap.org/data/2.5/weather?id=' . $ENV{'OPENWEATHER_TOKEN'} . 'units=metric&lang=fr') or print 'Unable to get page';
     my $tree = eval { return decode_json($content); };
 
     if(not $tree){
@@ -200,8 +208,8 @@ sub updatemeteo() {
 my $white = Gtk2::Gdk::Color->new( 0xFFFF, 0xFFFF, 0xFFFF );
 
 my $fenetre = Gtk2::Window->new('toplevel');
+my $table   = Gtk2::Table->new(8, 8, false);
 my $screen  = $fenetre->get_screen;
-my $table   = Gtk2::Table->new( 7, 6, true );
 $meteopng = Gtk2::Image->new_from_file('01d@2x.png');
 $meteotemp = new Gtk2::Label("");
 $meteotemp->set_markup( ' <span font_size="'
@@ -213,31 +221,32 @@ $meteotemp->set_markup( ' <span font_size="'
 $fenetre->modify_bg( 'normal', $white );
 
 $clockline = new Gtk2::Label(" 00:00:00 ");
+$clockline->modify_bg( 'normal', $red );
 
-$timeline[0] = new Gtk2::Label("");
-$timeline[1] = new Gtk2::Label("");
-$timeline[2] = new Gtk2::Label("");
-$timeline[3] = new Gtk2::Label("");
+
+foreach my $i (0..5) {
+    push(@msgline, { "BUS" => new Gtk2::Label("<<<<<BUS".$i)
+                    ,"DEST" => new Gtk2::Label(">>>>>DEST".$i)
+                    ,"TIME" => new Gtk2::Label("====TIME".$i)});
+}
 
 
 $table->attach_defaults( $clockline, 0, 1, 0, 1 );
-$table->attach_defaults( $meteotemp, 1, 3, 0, 1 );
-$table->attach_defaults( $meteopng,  3, 5, 0, 1 );
+$table->attach_defaults( $meteotemp, 1, 4, 0, 1 );
+$table->attach_defaults( $meteopng,  4, 6, 0, 1 );
 
-#$table->attach_defaults( $clockline[1], 0, 6, 1, 2 );
-#$table->attach_defaults( $clockline[2], 0, 6, 2, 3 );
 
-$table->attach_defaults( $timeline[0], 0, 5, 1, 2 );
-$table->attach_defaults( $timeline[1], 0, 5, 2, 3 );
-$table->attach_defaults( $timeline[2], 0, 5, 3, 4 );
-$table->attach_defaults( $timeline[3], 0, 5, 4, 5 );
-for my $dline (@timeline) {
-    $dline->set_alignment( 0, 0.5 );
+foreach my $i (0..5) {
+    $table->attach_defaults( $msgline[$i]->{"BUS"},  0, 1, $i+1, $i+2 );
+    $table->attach_defaults( $msgline[$i]->{"TIME"}, 6, 8, $i+1, $i+2 );
+    $table->attach_defaults( $msgline[$i]->{"DEST"}, 1, 6, $i+1, $i+2 );
 }
 
-$fenetre->resize( $screen->get_width, $screen->get_height );
 $fenetre->add($table);
 $fenetre->show_all;
+$fenetre->resize( $screen->get_width, $screen->get_height );
+#$fenetre->fullscreen();
+
 
 updatemeteo();
 updatedisplay();
