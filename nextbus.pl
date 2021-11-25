@@ -221,7 +221,6 @@ $meteotemp->set_markup( ' <span font_size="'
 $fenetre->modify_bg( 'normal', $white );
 
 $clockline = new Gtk2::Label(" 00:00:00 ");
-$clockline->modify_bg( 'normal', $red );
 
 
 foreach my $i (0..5) {
