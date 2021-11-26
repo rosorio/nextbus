@@ -244,6 +244,7 @@ foreach my $i (0..5) {
     $table->attach_defaults( $msgline[$i]->{"BUS"},  0, 1, $i+1, $i+2 );
     $table->attach_defaults( $msgline[$i]->{"TIME"}, 6, 8, $i+1, $i+2 );
     $table->attach_defaults( $msgline[$i]->{"DEST"}, 1, 6, $i+1, $i+2 );
+    $msgline[$i]->{"DEST"}->set_line_wrap(true);
 }
 
 $fenetre->add($table);
