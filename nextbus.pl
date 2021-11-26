@@ -21,9 +21,9 @@
     my %colors = ( "258", "red", "157", "purple", "259", "blue" );
 
     my $count = 0;
-    my $font_size  = "22000" . '" font_family = "dejavu';
+    my $font_size  = "17000" . '" font_family = "dejavu';
     my $font_name  = "dejavu";
-    my $stopname="lenine";
+    my $stopname;
     #my $stopname="musee+de+l+air+et+de+l+espace";
     #my $stopname="juste+heras";
     my $api = "https://api-ratp.pierre-grimaud.fr/v4/schedules/buses";
@@ -33,7 +33,9 @@
         my $url     = shift;
         my $tree;
 
-        my $content = get($url) or print 'Unable to get page';
+        my $content = get($url);
+	print "$url\n$content\n";
+	print $!;
         $tree = eval { return decode_json($content); };
         my $rec1;
         my $rec2;
@@ -52,8 +54,8 @@
 
 
         my @schedule = @{ $tree->{result}{schedules} };
-        $time = $schedule[0]->{message};
-        $dest = $schedule[0]->{destination};
+        $time = $schedule[1]->{message};
+        $dest = $schedule[1]->{destination};
         print $tree->{_metadata}{date} . "\n";
         print "$time $dest\n";
 
@@ -67,13 +69,14 @@
         $rec1->{'ctime'} = $ntime;
         $rec1->{'time'}  = $time;
         $time =~ s/[^\d]//g;
+	$time = 9999 if ($time eq "");
         $rec1->{'tval'}  = $time;
         $rec1->{'dest'}  = $dest;
         $rec1->{'drift'} = $drift;
         push @time_array, $rec1;
 
-        $time = $schedule[1]->{message};
-        $dest = $schedule[1]->{destination};
+        $time = $schedule[0]->{'message'};
+        $dest = $schedule[0]->{'destination'};
         print "$time $dest\n";
         ($ntime) = $time =~ /(\d+)/;
         $dest =~ s/Zone/Z./;
@@ -84,6 +87,7 @@
         $rec2->{'drift'} = $drift;
         $rec2->{'time'}  = $time;
         $time =~ s/[^\d]//g;
+	$time = 9999 if ($time eq "");
         $rec2->{'tval'} = $time;
         $rec2->{'dest'} = $dest;
         push @time_array, $rec2;
@@ -110,10 +114,10 @@ sub updatedisplay() {
     print "Update datas\n";
 
     @time_array = ();
-$stopname="Clemenceau+Sadi+Carnot";
+    $stopname="Clemenceau+Sadi+Carnot";
     &fill_array( "258", "${api}/258/${stopname}/R"
     );
-$stopname="carriers";
+    $stopname="carriers";
     &fill_array( "259", "${api}/259/${stopname}/R"
     );
     $stopname="Clemenceau+Sadi+Carnot";
@@ -142,30 +146,25 @@ $stopname="carriers";
             $realtime = $slist[$i]->{'time'};
         }
 
-        my $destination = substr("$slist[$i]->{'dest'}",0, 20);
-        $destination .= ".." . " " x(24 - length($destination));
+        my $destination = $slist[$i]->{'dest'};
         $dline->{"BUS"}->set_markup(' <span font_size="'
               . $font_size
               . '" color="white" bgcolor="'
-              . $colors{ $slist[$i]->{line} } . '">'
-              . $slist[$i]->{line}
+              . $colors{ $slist[$i]->{'line'} } . '">'
+              . $slist[$i]->{'line'}
               . '</span>');
         $dline->{"DEST"}->set_markup('<span font_size="'
               . $font_size
               . '" color="'
               . $label
               . '" bgcolor="white">'
-              .'<span font_size="'
-              . "$destination");
-
+              . "$destination"
+	      . '</span>');
         $dline->{"TIME"}->set_markup('<span font_size="'
               . $font_size
               . '" color="'
               . $label
               . '" bgcolor="white">'
-              .'<span font_size="'
-              . " $destination");
-        $dline->{"DEST"}->set_markup('<span font_size="'
               . $realtime
               . "</span>" );
         $i++;
@@ -181,8 +180,12 @@ sub updatemeteo() {
     my $icon;
     my $temp;
     my @weather;
-    my $content = get('https://api.openweathermap.org/data/2.5/weather?id=' . $ENV{'OPENWEATHER_TOKEN'} . 'units=metric&lang=fr') or print 'Unable to get page';
+    my $url= 'https://api.openweathermap.org/data/2.5/weather?id=2990970&appid=' . $ENV{'OPENWEATHER_TOKEN'} . '&units=metric&lang=fr';
+    my $content = get($url);
+    print $content;
     my $tree = eval { return decode_json($content); };
+
+    print $url . "\n";
 
     if(not $tree){
         print "Ooops\n";
@@ -197,6 +200,7 @@ sub updatemeteo() {
     $temp = $tree->{main}{feels_like};
 
     $meteopng->set_from_file($icon .'@2x.png');
+    print "ICON========> $icon" .'@2x.png\n';
 
     $meteotemp->set_markup( ' <span font_size="'
         . $font_size
@@ -231,8 +235,8 @@ foreach my $i (0..5) {
 }
 
 
-$table->attach_defaults( $clockline, 0, 1, 0, 1 );
-$table->attach_defaults( $meteotemp, 1, 4, 0, 1 );
+$table->attach_defaults( $clockline, 0, 2, 0, 1 );
+$table->attach_defaults( $meteotemp, 2, 4, 0, 1 );
 $table->attach_defaults( $meteopng,  4, 6, 0, 1 );
 
 
