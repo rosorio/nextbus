@@ -49,7 +49,7 @@
 
         if(not $tree){
             print "Ooops\n";
-            return 0;
+            return 1;
         }
 
 
@@ -181,6 +181,7 @@ sub updatemeteo() {
     my $temp;
     my @weather;
     my $url= 'https://api.openweathermap.org/data/2.5/weather?id=2990970&appid=' . $ENV{'OPENWEATHER_TOKEN'} . '&units=metric&lang=fr';
+    print "UPDATE METEO IN====>\n";
     my $content = get($url);
     print $content;
     my $tree = eval { return decode_json($content); };
@@ -188,16 +189,16 @@ sub updatemeteo() {
     print $url . "\n";
 
     if(not $tree){
-        print "Ooops\n";
-        return 0;
+        print "METEO Ooops\n";
+        return 1;
     }
 
     @weather = @{ $tree->{'weather'} };
-    #print  Dumper($tree);
+    print  Dumper($tree);
 
     $icon = $weather[0]->{'icon'};
     $description = $weather[0]->{'description'};
-    $temp = $tree->{main}{feels_like};
+    $temp = $tree->{'main'}{'feels_like'};
 
     $meteopng->set_from_file($icon .'@2x.png');
     print "ICON========> $icon" .'@2x.png\n';
@@ -207,6 +208,12 @@ sub updatemeteo() {
         . '" color="black" bgcolor="white">'
         . "$temp C / $description"
         . '</span>');
+    print ' <span font_size="'
+        . $font_size
+        . '" color="black" bgcolor="white">'
+        . "$temp C / $description"
+        . '</span>';
+    print "UPDATE METEO OUT <====\n";
 
 }
 
@@ -236,8 +243,8 @@ foreach my $i (0..5) {
 
 
 $table->attach_defaults( $clockline, 0, 2, 0, 1 );
-$table->attach_defaults( $meteotemp, 2, 4, 0, 1 );
-$table->attach_defaults( $meteopng,  4, 6, 0, 1 );
+$table->attach_defaults( $meteotemp, 2, 6, 0, 1 );
+$table->attach_defaults( $meteopng,  6, 8, 0, 1 );
 
 
 foreach my $i (0..5) {
