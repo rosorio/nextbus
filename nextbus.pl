@@ -112,13 +112,13 @@ sub updatedisplay() {
 
     @time_array = ();
     $stopname="28785";
-    &fill_array( "258", "${api}${stopname}:", "La Defense");
+    &fill_array( "258", "${api}${stopname}:", "RER A");
 
     $stopname="27239";
-    &fill_array( "259", "${api}${stopname}:", "Nanterre P/U");
+    &fill_array( "259", "${api}${stopname}:", "RER A/TER L");
 
     $stopname="26140";
-    &fill_array( "157", "${api}${stopname}:", "Nanterre ville");
+    &fill_array( "157", "${api}${stopname}:", "RER A");
 
 
     my @slist = sort {
