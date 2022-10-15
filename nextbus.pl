@@ -71,7 +71,7 @@
         $time =~ s/[^\d]//g;
 	$time = 9999 if ($time eq "");
         $rec1->{'tval'}  = $time;
-        $rec1->{'dest'}  = $dest;
+        $rec1->{'dest'}  = "[${sens}] " . $dest;
         $rec1->{'drift'} = $drift;
         push @time_array, $rec1;
 
@@ -89,7 +89,7 @@
         $time =~ s/[^\d]//g;
 	$time = 9999 if ($time eq "");
         $rec2->{'tval'} = $time;
-        $rec2->{'dest'} = $dest;
+        $rec2->{'dest'} = "[${sens}] " . $dest;
         push @time_array, $rec2;
     }
 
@@ -115,14 +115,13 @@ sub updatedisplay() {
 
     @time_array = ();
     $stopname="Clemenceau+Sadi+Carnot";
-    &fill_array( "258", "${api}/258/${stopname}/R"
-    );
+    &fill_array( "258", "${api}/258/${stopname}/R", "La Defense");
+
     $stopname="carriers";
-    &fill_array( "259", "${api}/259/${stopname}/R"
-    );
+    &fill_array( "259", "${api}/259/${stopname}/R", "Nanterre P/U");
+
     $stopname="Clemenceau+Sadi+Carnot";
-    &fill_array( "157", "${api}/157/${stopname}/A"
-    );
+    &fill_array( "157", "${api}/157/${stopname}/A", "Nanterre ville");
 
 
     my @slist = sort {
@@ -147,6 +146,9 @@ sub updatedisplay() {
         }
 
         my $destination = $slist[$i]->{'dest'};
+	$dline->{"BUS"}->set_text("");
+	$dline->{"DEST"}->set_text("");
+	$dline->{"TIME"}->set_text("");
         $dline->{"BUS"}->set_markup(' <span font_size="'
               . $font_size
               . '" color="white" bgcolor="'
