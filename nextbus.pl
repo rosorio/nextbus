@@ -21,7 +21,7 @@
     my $clockline;
     my $meteopng;
     my $meteotemp;
-    my %colors = ( "258", "red", "157", "purple", "259", "blue" );
+    my %colors = ( "258", "red", "157", "purple", "259", "blue", "158", "red" );
 
     my $count = 0;
     my $font_size  = "17000" . '" font_family = "dejavu';
@@ -121,6 +121,9 @@ sub updatedisplay() {
     $stopname="26140";
     &fill_array( "157", "${api}${stopname}:", "RER A");
 
+    $stopname="28784";
+    &fill_array( "158", "${api}${stopname}:", "Botanic");
+
 
     my @slist = sort {
          ( $a->{'delay'} <=> $b->{'delay'} )
@@ -132,9 +135,9 @@ sub updatedisplay() {
         $msgline[$i]->{"BUS"}->set_markup(' <span font_size="'
               . $font_size
               . '" color="white" bgcolor="'
-              . $colors{ $slist[$i]->{'line'} } . '">'
+              . $colors{ $slist[$i]->{'line'} } . '"><b> '
               . $slist[$i]->{'line'}
-              . '</span>');
+              . ' </b></span>');
         $msgline[$i]->{"DEST"}->set_markup('<span font_size="'
               . $font_size
               . '" color="'
@@ -151,6 +154,12 @@ sub updatedisplay() {
               . "</span>" );
         $i++;
         last if ($i >= scalar(@msgline));
+    }
+    while ($i < scalar(@msgline)) {
+        $msgline[$i]->{"TIME"}->set_markup('');
+        $msgline[$i]->{"DEST"}->set_markup('');
+        $msgline[$i]->{"BUS"}->set_markup('');
+        $i++;
     }
 
     print "End Update datas\n";
