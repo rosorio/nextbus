@@ -1,6 +1,7 @@
     use strict;
     use warnings;
     use LWP::Simple;
+    use LWP::UserAgent;
     use HTML::TreeBuilder::XPath;
     use Gtk2 '-init';
     use constant false => 0;
@@ -10,6 +11,8 @@
     use JSON;
     use DateTime;
     use Data::Dumper;
+    use DateTime::Format::RFC3339;
+    use HTML::Entities;
     my @msgline;
 
 
@@ -24,19 +27,31 @@
     my $font_size  = "17000" . '" font_family = "dejavu';
     my $font_name  = "dejavu";
     my $stopname;
-    #my $stopname="musee+de+l+air+et+de+l+espace";
-    #my $stopname="juste+heras";
-    my $api = "https://api-ratp.pierre-grimaud.fr/v4/schedules/buses";
+    my $api = "https://prim.iledefrance-mobilites.fr/marketplace/stop-monitoring?MonitoringRef=STIF:StopPoint:Q:";
+    my $dateparser = DateTime::Format::RFC3339->new();
 
     sub fill_array() {
         my $line    = shift;
         my $url     = shift;
+        my $sens    = shift;
         my $tree;
+        my @monitoringDelivery;
+        my @schedule;
 
-        my $content = get($url);
-	print "$url\n$content\n";
-	print $!;
-        $tree = eval { return decode_json($content); };
+        print "Update ligne $line / $sens : $url $ENV{'STIF_TOKEN'}\n";
+        my $ua = LWP::UserAgent->new;
+        my $res = $ua->get($url,
+            'Accept' => 'application/json',
+            'apikey' => $ENV{'STIF_TOKEN'});
+
+        if ($res->is_success) {
+            print "Line update Success\n";
+            $tree = eval { return decode_json($res->decoded_content); };
+            @monitoringDelivery = @{ $tree->{Siri}{ServiceDelivery}{StopMonitoringDelivery} };
+            @schedule = @{ $monitoringDelivery[0]->{MonitoredStopVisit} };
+            $tree = eval { return decode_json($res->decoded_content); };
+        }
+
         my $rec1;
         my $rec2;
 
@@ -52,45 +67,26 @@
             return 1;
         }
 
-
-        my @schedule = @{ $tree->{result}{schedules} };
         $time = $schedule[1]->{message};
-        $dest = $schedule[1]->{destination};
-        print $tree->{_metadata}{date} . "\n";
-        print "$time $dest\n";
+        $dest = $schedule[0]->{MonitoredVehicleJourney}{MonitoredCall}{DestinationDisplay}[0]{value};
 
         $dest =~ s/.+>.//g;
         $dest =~ s/Zone/Z./;
 
-        ($ntime) = $time =~ /(\d+)/;
-
-        $rec1->{'line'}  = $line;
-        $rec1->{'ptime'} = $rec1->{'ctime'};
-        $rec1->{'ctime'} = $ntime;
-        $rec1->{'time'}  = $time;
-        $time =~ s/[^\d]//g;
-	$time = 9999 if ($time eq "");
-        $rec1->{'tval'}  = $time;
-        $rec1->{'dest'}  = "[${sens}] " . $dest;
-        $rec1->{'drift'} = $drift;
-        push @time_array, $rec1;
-
-        $time = $schedule[0]->{'message'};
-        $dest = $schedule[0]->{'destination'};
-        print "$time $dest\n";
-        ($ntime) = $time =~ /(\d+)/;
-        $dest =~ s/Zone/Z./;
-        $dest =~ s/.+>.//g;
-        $rec2->{'line'}  = $line;
-        $rec2->{'ptime'} = $rec2->{'ctime'};
-        $rec2->{'ctime'} = $ntime;
-        $rec2->{'drift'} = $drift;
-        $rec2->{'time'}  = $time;
-        $time =~ s/[^\d]//g;
-	$time = 9999 if ($time eq "");
-        $rec2->{'tval'} = $time;
-        $rec2->{'dest'} = "[${sens}] " . $dest;
-        push @time_array, $rec2;
+        my $reftime = $dateparser->parse_datetime($monitoringDelivery[0]->{ResponseTimestamp});
+        foreach my $montime (@schedule)
+        {
+            next if ($montime->{MonitoredVehicleJourney}{OperatorRef}{value} !~ /\.${line}/);
+            my $record;
+            $record->{'line'} = $line;
+            $record->{'dest'} = encode_entities("[${sens}] " . $montime->{MonitoredVehicleJourney}{MonitoredCall}{DestinationDisplay}[0]{value});
+            my $stoptime = $dateparser->parse_datetime($montime->{MonitoredVehicleJourney}{MonitoredCall}{ExpectedDepartureTime});
+            my $delta = $reftime->delta_ms($stoptime);
+            $record->{'delay'} = $delta->minutes;
+            print "RECEIVED: " . $record->{'line'} . " " .$record->{'dest'} . " " . $delta->minutes . ":" . $delta->seconds."\n";
+            push @time_array, $record;
+        }
+    1;
     }
 
 
@@ -104,7 +100,7 @@
         $clockline->set_markup( ' <span font_size="'
             . $font_size
             . '" color="black" bgcolor="white">'
-            . $local->strftime('%H:%M') 
+            . $local->strftime('%H:%M')
             . '</span>');
 
         1;
@@ -112,67 +108,50 @@
 
 sub updatedisplay() {
     print "Update datas\n";
+    my $label = "black";
 
     @time_array = ();
-    $stopname="Clemenceau+Sadi+Carnot";
-    &fill_array( "258", "${api}/258/${stopname}/R", "La Defense");
+    $stopname="28785";
+    &fill_array( "258", "${api}${stopname}:", "La Defense");
 
-    $stopname="carriers";
-    &fill_array( "259", "${api}/259/${stopname}/R", "Nanterre P/U");
+    $stopname="27239";
+    &fill_array( "259", "${api}${stopname}:", "Nanterre P/U");
 
-    $stopname="Clemenceau+Sadi+Carnot";
-    &fill_array( "157", "${api}/157/${stopname}/A", "Nanterre ville");
+    $stopname="26140";
+    &fill_array( "157", "${api}${stopname}:", "Nanterre ville");
 
 
     my @slist = sort {
-        ( $a->{'tval'} + $a->{'drift'} ) <=> ( $b->{'tval'} + $b->{'drift'} )
+         ( $a->{'delay'} <=> $b->{'delay'} )
     } @time_array;
 
-    my $i    = 0;
-    my $honk = 0;
-    for my $dline (@msgline) {
-        my $label = "black";
-        my $realtime = "";
-        if ( $slist[$i]->{'drift'} > 4 ) {
-            $label = "red";
-        }
-
-        if ( $slist[$i]->{'ctime'} =~ m/^\d/ ) {
-            $realtime =
-              ( $slist[$i]->{'ctime'} + $slist[$i]->{'drift'} ) . " mn";
-        }
-        else {
-            $realtime = $slist[$i]->{'time'};
-        }
-
-        my $destination = $slist[$i]->{'dest'};
-	$dline->{"BUS"}->set_text("");
-	$dline->{"DEST"}->set_text("");
-	$dline->{"TIME"}->set_text("");
-        $dline->{"BUS"}->set_markup(' <span font_size="'
+    my $i = 0;
+    foreach my $line (@slist)
+    {
+        $msgline[$i]->{"BUS"}->set_markup(' <span font_size="'
               . $font_size
               . '" color="white" bgcolor="'
               . $colors{ $slist[$i]->{'line'} } . '">'
               . $slist[$i]->{'line'}
               . '</span>');
-        $dline->{"DEST"}->set_markup('<span font_size="'
+        $msgline[$i]->{"DEST"}->set_markup('<span font_size="'
               . $font_size
               . '" color="'
               . $label
               . '" bgcolor="white">'
-              . "$destination"
-	      . '</span>');
-        $dline->{"TIME"}->set_markup('<span font_size="'
+              . $slist[$i]->{'dest'}
+              . '</span>');
+        $msgline[$i]->{"TIME"}->set_markup('<span font_size="'
               . $font_size
               . '" color="'
               . $label
               . '" bgcolor="white">'
-              . $realtime
+              . $slist[$i]->{'delay'}
               . "</span>" );
         $i++;
+        last if ($i >= scalar(@msgline));
     }
-    system('/usr/local/bin/mplayer /usr/home/rodrigo/cars-passing.mp3 &')
-      if ( $honk == 1 );
+
     print "End Update datas\n";
     1;
 }
