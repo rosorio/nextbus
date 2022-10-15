@@ -83,6 +83,7 @@
             my $stoptime = $dateparser->parse_datetime($montime->{MonitoredVehicleJourney}{MonitoredCall}{ExpectedDepartureTime});
             my $delta = $reftime->delta_ms($stoptime);
             $record->{'delay'} = $delta->minutes;
+            next if ($delta->minutes == 0);
             print "RECEIVED: " . $record->{'line'} . " " .$record->{'dest'} . " " . $delta->minutes . ":" . $delta->seconds."\n";
             push @time_array, $record;
         }
