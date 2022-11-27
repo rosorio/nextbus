@@ -21,7 +21,7 @@
     my $clockline;
     my $meteopng;
     my $meteotemp;
-    my %colors = ( "258", "red", "157", "purple", "259", "blue", "158", "red" );
+    my %colors = ( "258", "red", "157", "purple", "259", "blue", "158", "orange" );
 
     my $count = 0;
     my $font_size  = "17000" . '" font_family = "dejavu';
@@ -82,7 +82,7 @@
             $record->{'dest'} = encode_entities("[${sens}] " . $montime->{MonitoredVehicleJourney}{MonitoredCall}{DestinationDisplay}[0]{value});
             my $stoptime = $dateparser->parse_datetime($montime->{MonitoredVehicleJourney}{MonitoredCall}{ExpectedDepartureTime});
             my $delta = $reftime->delta_ms($stoptime);
-            $record->{'delay'} = $delta->minutes;
+            $record->{'delay'} = ($delta->hours *60) + $delta->minutes;
             next if ($delta->minutes == 0);
             print "RECEIVED: " . $record->{'line'} . " " .$record->{'dest'} . " " . $delta->minutes . ":" . $delta->seconds."\n";
             push @time_array, $record;
@@ -90,9 +90,7 @@
     1;
     }
 
-
-
-    sub updatetime() {
+sub updatetime() {
         my $dt = DateTime->now();
 
         my $local = $dt->clone;
@@ -121,8 +119,8 @@ sub updatedisplay() {
     $stopname="26140";
     &fill_array( "157", "${api}${stopname}:", "RER A");
 
-    $stopname="28784";
-    &fill_array( "158", "${api}${stopname}:", "Botanic");
+#    $stopname="28784";
+#    &fill_array( "158", "${api}${stopname}:", "Botanic");
 
 
     my @slist = sort {
