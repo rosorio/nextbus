@@ -73,9 +73,13 @@
         $dest =~ s/.+>.//g;
         $dest =~ s/Zone/Z./;
 
-        my $reftime = $dateparser->parse_datetime($monitoringDelivery[0]->{ResponseTimestamp});
+	print "REFTIME: $monitoringDelivery[0]->{ResponseTimestamp}\n";
+       # my $reftime = $dateparser->parse_datetime($monitoringDelivery[0]->{ResponseTimestamp});
+	my $now = DateTime->now;
+	my $reftime = $dateparser->parse_datetime($now->rfc3339);
         foreach my $montime (@schedule)
         {
+	    print "AT STOP: $montime->{MonitoredVehicleJourney}{MonitoredCall}{ExpectedDepartureTime}\n";
             next if ($montime->{MonitoredVehicleJourney}{OperatorRef}{value} !~ /\.${line}/);
             my $record;
             $record->{'line'} = $line;
