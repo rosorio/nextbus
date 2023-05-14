@@ -73,22 +73,23 @@
         $dest =~ s/.+>.//g;
         $dest =~ s/Zone/Z./;
 
-	print "REFTIME: $monitoringDelivery[0]->{ResponseTimestamp}\n";
-       # my $reftime = $dateparser->parse_datetime($monitoringDelivery[0]->{ResponseTimestamp});
-	my $now = DateTime->now;
-	my $reftime = $dateparser->parse_datetime($now->rfc3339);
+	my $now=DateTime->now;
+	$now->set_time_zone("UTC");
+
         foreach my $montime (@schedule)
         {
-	    print "AT STOP: $montime->{MonitoredVehicleJourney}{MonitoredCall}{ExpectedDepartureTime}\n";
             next if ($montime->{MonitoredVehicleJourney}{OperatorRef}{value} !~ /\.${line}/);
             my $record;
             $record->{'line'} = $line;
             $record->{'dest'} = encode_entities("[${sens}] " . $montime->{MonitoredVehicleJourney}{MonitoredCall}{DestinationDisplay}[0]{value});
+	    print "ros\n";
+	    print $montime->{MonitoredVehicleJourney}{MonitoredCall}{ExpectedDepartureTime} . "\n";
+	    print "ros\n";
             my $stoptime = $dateparser->parse_datetime($montime->{MonitoredVehicleJourney}{MonitoredCall}{ExpectedDepartureTime});
-            my $delta = $reftime->delta_ms($stoptime);
+            my $delta = $now->delta_ms($stoptime);
             $record->{'delay'} = ($delta->hours *60) + $delta->minutes;
             next if ($delta->minutes == 0);
-            print "RECEIVED: " . $record->{'line'} . " " .$record->{'dest'} . " " . $delta->minutes . ":" . $delta->seconds."\n";
+            print "RECEIVED: " . $record->{'line'} . " " .$record->{'dest'} . " " . $delta->minutes . ":" . $delta->seconds. "\n";
             push @time_array, $record;
         }
     1;
