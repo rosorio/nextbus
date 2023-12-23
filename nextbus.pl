@@ -118,14 +118,14 @@ sub updatedisplay() {
     $stopname="28785";
     &fill_array( "258", "${api}${stopname}:", "RER A");
 
-    $stopname="27239";
+    $stopname="27240";
     &fill_array( "259", "${api}${stopname}:", "RER A/TER L");
 
     $stopname="26140";
     &fill_array( "157", "${api}${stopname}:", "RER A");
 
-#    $stopname="28784";
-#    &fill_array( "158", "${api}${stopname}:", "Botanic");
+    $stopname="28784";
+    &fill_array( "158", "${api}${stopname}:", "Botanic");
 
 
     my @slist = sort {
@@ -229,7 +229,7 @@ $fenetre->modify_bg( 'normal', $white );
 $clockline = new Gtk2::Label(" 00:00:00 ");
 
 
-foreach my $i (0..5) {
+foreach my $i (0..7) {
     push(@msgline, { "BUS" => new Gtk2::Label("<<<<<BUS".$i)
                     ,"DEST" => new Gtk2::Label(">>>>>DEST".$i)
                     ,"TIME" => new Gtk2::Label("====TIME".$i)});
@@ -241,7 +241,7 @@ $table->attach_defaults( $meteotemp, 2, 6, 0, 1 );
 $table->attach_defaults( $meteopng,  6, 8, 0, 1 );
 
 
-foreach my $i (0..5) {
+foreach my $i (0..7) {
     $table->attach_defaults( $msgline[$i]->{"BUS"},  0, 1, $i+1, $i+2 );
     $table->attach_defaults( $msgline[$i]->{"TIME"}, 6, 8, $i+1, $i+2 );
     $table->attach_defaults( $msgline[$i]->{"DEST"}, 1, 6, $i+1, $i+2 );
