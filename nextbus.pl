@@ -21,6 +21,7 @@
     my $clockline;
     my $meteopng;
     my $meteotemp;
+    my $waterlevel;
     my %colors = ( "258", "red", "157", "purple", "259", "blue", "158", "orange" );
 
     my $count = 0;
@@ -197,6 +198,13 @@ sub updatemeteo() {
     $meteopng->set_from_file($icon .'@2x.png');
     print "ICON========> $icon" .'@2x.png\n';
 
+    my $waterrun = `ruby /home/freebsd/query.rb`;
+    $waterlevel->set_markup(' <span font_size="'
+        . $font_size
+	. '" color="black" bgcolor="white">'
+	. $waterrun
+	. '</span>');
+
     $meteotemp->set_markup( ' <span font_size="'
         . $font_size
         . '" color="black" bgcolor="white">'
@@ -214,10 +222,11 @@ sub updatemeteo() {
 my $white = Gtk2::Gdk::Color->new( 0xFFFF, 0xFFFF, 0xFFFF );
 
 my $fenetre = Gtk2::Window->new('toplevel');
-my $table   = Gtk2::Table->new(8, 8, false);
+my $table   = Gtk2::Table->new(10, 8, false);
 my $screen  = $fenetre->get_screen;
 $meteopng = Gtk2::Image->new_from_file('01d@2x.png');
 $meteotemp = new Gtk2::Label("");
+$waterlevel = new Gtk2::Label("WATER");
 $meteotemp->set_markup( ' <span font_size="'
     . $font_size
     . '" color="black" bgcolor="white">'
@@ -239,6 +248,7 @@ foreach my $i (0..7) {
 $table->attach_defaults( $clockline, 0, 2, 0, 1 );
 $table->attach_defaults( $meteotemp, 2, 6, 0, 1 );
 $table->attach_defaults( $meteopng,  6, 8, 0, 1 );
+$table->attach_defaults( $waterlevel, 1, 8, 9, 10 );
 
 
 foreach my $i (0..7) {
