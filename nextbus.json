@@ -1,0 +1,36 @@
+{
+    "stop": {
+        "url":  "https://prim.iledefrance-mobilites.fr/marketplace/stop-monitoring?MonitoringRef=STIF:StopPoint:Q:",
+        "token": "",
+        
+        "stops": [
+            {
+                "id": "28785",
+                "bus_number": "258",
+                "bus_color": "red",
+                "extra": "[RER A/E] -"
+            },
+            {
+                "id": "27240",
+                "bus_number": "259",
+                "bus_color": "blue",
+                "extra": "[RER A/E/TER L] -"
+            },
+            {
+                "id": "26140",
+                "bus_number": "157",
+                "bus_color": "purple",
+                "extra": "[RER A] -"
+            },
+            {
+                "id": "28784",
+                "bus_number": "158",
+                "bus_color": "orange",
+                "extra": "[Botanic] -"
+            }
+        ]
+    },
+    "meteo": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=48.892&longitude=2.2067&hourly=temperature_2m,rain,showers,snowfall,weather_code&daily=weather_code,sunrise,sunset&timezone=Europe%2FBerlin&forecast_days=2"
+    }
+}

@@ -1,0 +1,232 @@
+{
+	"0": {
+		"day": {
+			"description": "Ensoleillé",
+			"image": "01d_w.png"
+		},
+		"night": {
+			"description": "Clair",
+			"image": "01n_w.png"
+		}
+	},
+	"1": {
+		"day": {
+			"description": "Principalement ensoleillé",
+			"image": "01d_w.png"
+		},
+		"night": {
+			"description": "Principalement clair",
+			"image": "01n_w.png"
+		}
+	},
+	"2": {
+		"day": {
+			"description": "Partiellement nuageux",
+			"image": "02d_w.png"
+		},
+		"night": {
+			"description": "Partiellement nuageux",
+			"image": "02n_w.png"
+		}
+	},
+	"3": {
+		"day": {
+			"description": "Nuageux",
+			"image": "03d_w.png"
+		},
+		"night": {
+			"description": "Nuageux",
+			"image": "03n_w.png"
+		}
+	},
+	"45": {
+		"day": {
+			"description": "Brumeux",
+			"image": "50d_w.png"
+		},
+		"night": {
+			"description": "Brumeux",
+			"image": "50n_w.png"
+		}
+	},
+	"48": {
+		"day": {
+			"description": "Brouillard givrant",
+			"image": "50d_w.png"
+		},
+		"night": {
+			"description": "Brouillard givrant",
+			"image": "50n_w.png"
+		}
+	},
+	"51": {
+		"day": {
+			"description": "Bruine légère",
+			"image": "09d_w.png"
+		},
+		"night": {
+			"description": "Bruine légère",
+			"image": "09n_w.png"
+		}
+	},
+	"53": {
+		"day": {
+			"description": "Bruine",
+			"image": "09d_w.png"
+		},
+		"night": {
+			"description": "Bruine",
+			"image": "09n_w.png"
+		}
+	},
+	"55": {
+		"day": {
+			"description": "Forte bruine",
+			"image": "09d_w.png"
+		},
+		"night": {
+			"description": "Forte bruine",
+			"image": "09n_w.png"
+		}
+	},
+	"56": {
+		"day": {
+			"description": "Bruine légère verglaçante",
+			"image": "09d_w.png"
+		},
+		"night": {
+			"description": "Bruine légère verglaçante",
+			"image": "09n_w.png"
+		}
+	},
+	"57": {
+		"day": {
+			"description": "Bruine verglaçante",
+			"image": "09d_w.png"
+		},
+		"night": {
+			"description": "Bruine verglaçante",
+			"image": "09n_w.png"
+		}
+	},
+	"61": {
+		"day": {
+			"description": "Pluie légère",
+			"image": "10d_w.png"
+		},
+		"night": {
+			"description": "Pluie légère",
+			"image": "10n_w.png"
+		}
+	},
+	"63": {
+		"day": {
+			"description": "Pluie",
+			"image": "10d_w.png"
+		},
+		"night": {
+			"description": "Pluie",
+			"image": "10n_w.png"
+		}
+	},
+	"65": {
+		"day": {
+			"description": "Forte pluie",
+			"image": "10d_w.png"
+		},
+		"night": {
+			"description": "Forte pluie",
+			"image": "10n_w.png"
+		}
+	},
+	"66": {
+		"day": {
+			"description": "Pluie légère verglaçante",
+			"image": "10d_w.png"
+		},
+		"night": {
+			"description": "Pluie légère verglaçante",
+			"image": "10n_w.png"
+		}
+	},
+	"67": {
+		"day": {
+			"description": "Pluie verglaçante",
+			"image": "10d_w.png"
+		},
+		"night": {
+			"description": "Pluie verglaçante",
+			"image": "10n_w.png"
+		}
+	},
+	"71": {
+		"day": {
+			"description": "Neige légère",
+			"image": "13d_w.png"
+		},
+		"night": {
+			"description": "Neige légère",
+			"image": "13n_w.png"
+		}
+	},
+	"73": {
+		"day": {
+			"description": "Neige",
+			"image": "13d_w.png"
+		},
+		"night": {
+			"description": "Neige",
+			"image": "13n_w.png"
+		}
+	},
+	"75": {
+		"day": {
+			"description": "Forte neige",
+			"image": "13d_w.png"
+		},
+		"night": {
+			"description": "Forte neige",
+			"image": "13n_w.png"
+		}
+	},
+	"77": {
+		"day": {
+			"description": "Grains de neige",
+			"image": "13d_w.png"
+		},
+		"night": {
+			"description": "Grains de neige",
+			"image": "13n_w.png"
+		}
+	},
+	"80": {
+		"day": {
+			"description": "Averses légères",
+			"image": "09d_w.png"
+		},
+		"night": {
+			"description": "Averses légères",
+			"image": "09n_w.png"
+		}
+	},
+	"81": {
+		"day": {
+			"description": "Averses",
+			"image": "09d_w.png"
+		},
+		"night": {
+			"description": "Averses",
+			"image": "09n_w.png"
+		}
+	},
+	"82": {
+		"day": {
+			"description": "Fortes averses",
+			"image": "09d_w.png"
+		},
+		"night": {
+			"description": "Fortes averses",
+			"image": "09n_w.png"
+		}
+	}
+}
