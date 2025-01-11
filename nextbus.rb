@@ -80,7 +80,7 @@ def update_meteo
         wcode = wdata['hourly']['weather_code'][now.hour + i]
         daynight = daynight(sunrise_d1,sunrise_d2,sunset_d1,sunset_d2, now + i/24r)
         ico_obj.set_from_file(
-        "#{File.expand_path(File.dirname(__FILE__))}/../images/#{@weathermap[wcode.to_s][daynight]['image']}")
+        "#{File.expand_path(File.dirname(__FILE__))}/images/#{@weathermap[wcode.to_s][daynight]['image']}")
 
         temp_obj = get_object("METEO_TEMP%d" % [i])
         temp_obj.set_text("#{wdata['hourly']['temperature_2m'][now.hour + i]}°")
