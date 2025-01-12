@@ -104,7 +104,7 @@ def get_schedule(line_id)
         when Net::HTTPSuccess then
             return response.body
         else
-            warn "fetching stop id %d time: %d %s" % [line['id'], response.code, response.message]
+            warn "fetching stop id %d time: %d %s" % [line_id, response.code, response.message]
         end
     end
     return ""
@@ -117,11 +117,14 @@ def parse_color(hex_color)
 end
 
 def update_bus_stops_time
-
     timearray = Array.new
     @config['stop']['stops'].each {|line|
-        response = JSON.parse(get_schedule(line['id']))
-        schedule = response['Siri']['ServiceDelivery']['StopMonitoringDelivery'][0]['MonitoredStopVisit']
+        begin
+            response = JSON.parse(get_schedule(line['id']))
+            schedule = response['Siri']['ServiceDelivery']['StopMonitoringDelivery'][0]['MonitoredStopVisit']
+        rescue
+            next
+        end
         now = DateTime.now
 
         stop_time = Array.new
