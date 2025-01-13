@@ -32,5 +32,27 @@
     },
     "meteo": {
         "url": "https://api.open-meteo.com/v1/forecast?latitude=48.892&longitude=2.2067&hourly=temperature_2m,rain,showers,snowfall,weather_code&daily=weather_code,sunrise,sunset&timezone=Europe%2FBerlin&forecast_days=2"
-    }
+    },
+    "waterlevel": [
+        {
+            "id": "0d484a",
+            "color": "pink",
+            "label": "monstera"
+        },
+        {
+            "id": "0d4a5d",
+            "color": "yellow",
+            "label": "framboisier"
+        },
+        {
+            "id": "0d4a6b",
+            "color": "blue",
+            "label": "shiflora"
+        },
+        {
+            "id": "0d4b6b",
+            "color": "grey",
+            "label": "pellaea"
+        }
+    ]
 }
