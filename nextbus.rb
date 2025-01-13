@@ -69,10 +69,9 @@ def update_meteo
     daynight = daynight(sunrise_d1,sunrise_d2,sunset_d1,sunset_d2, now)
 
     curweather.set_text("#{wdata['hourly']['temperature_2m'][now.hour]}°C  #{@weathermap[wcode.to_s][daynight]['description']}")
-    
+
     i = 0
     while i < 14
-        
         time_obj = get_object("METEO_TIME%d" % [i])
         time_obj.set_text("%dh" % ((now.hour + i) % 24) )
 
@@ -84,7 +83,7 @@ def update_meteo
 
         temp_obj = get_object("METEO_TEMP%d" % [i])
         temp_obj.set_text("#{wdata['hourly']['temperature_2m'][now.hour + i]}°")
-        
+
         i = i + 1
     end
 end
@@ -95,10 +94,10 @@ def get_schedule(line_id)
         req = Net::HTTP::Get.new(uri)
         req['Accept'] = 'application/json'
         req['apikey'] = @config["stop"]["token"]
-        
+
         response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == 'https') { |http|
             http.request(req)
-        }        
+        }
 
         case response
         when Net::HTTPSuccess then
@@ -131,38 +130,43 @@ def update_bus_stops_time
         schedule.each {|schedule|
             if schedule['MonitoredVehicleJourney']['OperatorRef']['value'].match("\\.%s:$" %line ['bus_number'])
                 delay = DateTime.parse(schedule['MonitoredVehicleJourney']['MonitoredCall']['ExpectedDepartureTime']) - now
-                delay_mn = (delay * 24 * 60).to_i 
-                stop_time.push( delay_mn, schedule['MonitoredVehicleJourney']['MonitoredCall']['DestinationDisplay'][0]['value'])
+                delay_mn = (delay * 24 * 60).to_i
+                stop_time.push( [ delay_mn, schedule['MonitoredVehicleJourney']['MonitoredCall']['DestinationDisplay'][0]['value']])
             end
         }
         if stop_time.length() > 0
-            stop_time.sort_by { |s| s[0].to_i }
+            stop_time = stop_time.sort_by { |s| s[0].to_i }
             timearray.push([ line, stop_time])
         end
 
     }
-    timearray.sort_by { |s| 
-        s[1][0].to_i 
+    timearray = timearray.sort_by { |s|
+        s[1][0][0].to_i
     }
-    lineno = 0 
+    lineno = 0
     timearray.each { |x|
         num_object = get_object("BUS_LIGNE_%d" % lineno)
         dest_object = get_object("BUS_DESTINATION_%d" % lineno)
         first_stop_obj = get_object("BUS_PASSAGE0_%d" % lineno)
         second_stop_obj = get_object("BUS_PASSAGE1_%d" % lineno)
-    
         bgcolor = parse_color(x[0]['bus_color']);
         attr = Pango::AttrList.new
         attr.insert(Pango::AttrForeground.new(65535 ,65535 ,65535))
         attr.insert(Pango::AttrBackground.new(65535 * bgcolor.red, 65535 * bgcolor.green, 65535 *bgcolor.blue))
         attr.insert(Pango::AttrFontDesc.new("Sans Bold 14"))
+
         num_object.set_attributes(attr)
         num_object.set_text("  %d  " % x[0]['bus_number'])
         dest_object.set_text(" #{x[0]['extra']} #{x[1][1]}")
-        first_stop_obj.set_text("#{x[1][0]} mn")
+        #if x[1][0][0].to_i > 1
+        #    first_stop_obj.set_text("#{x[1][0][0]} mn")
+        #else
+        #    first_stop_obj.set_text("🚏🚌")
+        #end
+        first_stop_obj.set_text("#{x[1][0][0]} mn")
 
-        if x[1].length() > 2
-            second_stop_obj.set_text("#{x[1][2]} mn")
+        if x[1].length() > 1
+            second_stop_obj.set_text("#{x[1][1][0]} mn")
         else
             second_stop_obj.set_text("")
         end
@@ -179,7 +183,7 @@ def update_bus_stops_time
         dest_object = get_object("BUS_DESTINATION_%d" % lineno)
         first_stop_obj = get_object("BUS_PASSAGE0_%d" % lineno)
         second_stop_obj = get_object("BUS_PASSAGE1_%d" % lineno)
-        
+
         num_object.set_attributes(attr)
         num_object.set_text("")
         dest_object.set_text("")
@@ -187,9 +191,6 @@ def update_bus_stops_time
         second_stop_obj.set_text("")
         lineno = lineno + 1
     end
-        
-
-
 
 end
 
@@ -212,7 +213,7 @@ def load_ui
     screen = Gdk::Screen.default
 
     window.set_default_size(1024, 600)
-    window.resizable = false 
+    window.resizable = false
 end
 
 load_ui()
