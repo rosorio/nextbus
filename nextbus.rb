@@ -158,13 +158,13 @@ def update_bus_stops_time
 
         num_object.set_attributes(attr)
         num_object.set_text("  %d  " % x[0]['bus_number'])
-        dest_object.set_text(" #{x[0]['extra']} #{x[1][1]}")
+        dest_object.set_text(" #{x[0]['extra']} #{x[1][0][1]}")
         if x[1][0][0].to_i > 1
             first_stop_obj.set_text("#{x[1][0][0]} mn")
         else
-            first_stop_obj.set_text("🚏🚌")
+            #first_stop_obj.set_text("🚏🚌")
+            first_stop_obj.set_text("0 mn")
         end
-        #first_stop_obj.set_text("#{x[1][0][0]} mn")
 
         if x[1].length() > 1
             second_stop_obj.set_text("#{x[1][1][0]} mn")
@@ -204,7 +204,8 @@ def update_waterlevel
                 mlabel_object = get_object("MLABEL%d" % i)
                 moist_object = get_object("MOIST%d" % i)
                 mlabel_object.set_text(wl['label'])
-                moist_object.set_text("#{points[0]['last_moisture'].to_s} 🚰")
+                #moist_object.set_text("#{points[0]['last_moisture'].to_s} 🚰")
+                moist_object.set_text("#{points[0]['last_moisture'].to_s}")
                 i = i + 1
             end
         }
@@ -233,11 +234,24 @@ def load_ui
     window.resizable = false
 end
 
+def led_light()
+    led = get_object("LedLight")
+    #led.set_markup("<span background=\"#f6f6f5f5f4f4\" foreground=\"green\">↺</span>")
+    led.set_markup("<span background=\"#f6f6f5f5f4f4\" foreground=\"green\">@</span>")
+    GLib::Timeout.add(3000) do
+       led = get_object("LedLight")
+       #led.set_markup("<span background=\"#f6f6f5f5f4f4\" foreground=\"#f6f6f5f5f4f4\">↺</span>")
+       led.set_markup("<span background=\"#f6f6f5f5f4f4\" foreground=\"#f6f6f5f5f4f4\">@</span>")
+       false
+    end
+end
+
 load_ui()
 update_date_time()
 update_meteo()
 update_bus_stops_time()
 update_waterlevel()
+led_light()
 
 GLib::Timeout.add(100) do
     update_date_time
@@ -253,6 +267,7 @@ end
 
 GLib::Timeout.add(30000) do
     puts "Start Bus update"
+    led_light()
     update_bus_stops_time()
     puts "End Bus update"
     true
