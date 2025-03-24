@@ -197,19 +197,30 @@ end
 
 def update_waterlevel
     i = 0
+    one_hours_ago = Time.now - (6000)
+
     influxdb = InfluxDB::Client.new 'waterlevel', host: "central.home"
-    influxdb.query 'select last(*) from "Fineoffset-WH51" group by id' do |name, tags, points|
-        @config['waterlevel'].each { |wl|
-            if tags['id'] == wl['id']
-                mlabel_object = get_object("MLABEL%d" % i)
-                moist_object = get_object("MOIST%d" % i)
-                mlabel_object.set_text(wl['label'])
-                #moist_object.set_text("#{points[0]['last_moisture'].to_s} 🚰")
-                moist_object.set_text("#{points[0]['last_moisture'].to_s}")
-                i = i + 1
+    @config['waterlevel'].each { |wl|
+        mlabel_object = get_object("MLABEL%d" % i)
+        moist_object = get_object("MOIST%d" % i)
+
+        mlabel_object.set_text(wl['label'])
+        puts "query #{wl['label']} ---- "
+
+        points = influxdb.query "SELECT * FROM \"Fineoffset-WH51\" where id = '#{wl['id']}' ORDER BY time DESC LIMIT 1;"
+        if points.count > 0
+            point = points[0]['values'][0];
+            puts "#{Time.parse(point['time'].to_s)} #{one_hours_ago}"
+            if Time.parse(point['time'].to_s) > one_hours_ago
+                moist_object.set_text("#{point['moisture'].to_s}")
+            else
+                moist_object.set_text("DOWN")
             end
-        }
-    end
+        else
+            moist_object.set_text("OFF")
+        end
+        i = i + 1
+    }
 end
 
 def load_ui
