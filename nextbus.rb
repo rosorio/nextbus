@@ -197,7 +197,7 @@ end
 
 def update_waterlevel
     i = 0
-    one_hours_ago = Time.now - (6000)
+    one_hours_ago = Time.now - (1000)
 
     influxdb = InfluxDB::Client.new 'waterlevel', host: "central.home"
     @config['waterlevel'].each { |wl|
@@ -210,7 +210,7 @@ def update_waterlevel
         points = influxdb.query "SELECT * FROM \"Fineoffset-WH51\" where id = '#{wl['id']}' ORDER BY time DESC LIMIT 1;"
         if points.count > 0
             point = points[0]['values'][0];
-            puts "#{Time.parse(point['time'].to_s)} #{one_hours_ago}"
+            puts "#{Time.parse(point['time'].to_s)} #{one_hours_ago.utc}"
             if Time.parse(point['time'].to_s) > one_hours_ago
                 moist_object.set_text("#{point['moisture'].to_s}")
             else
