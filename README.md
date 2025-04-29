@@ -2,4 +2,4 @@
 
 ![](display.png?rax=true)
 
-The application was completelly rewrite in ruby using GTK3 APIs
+The application was completelly rewrote in ruby using GTK3 APIs
