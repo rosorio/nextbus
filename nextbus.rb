@@ -89,10 +89,11 @@ def update_meteo
     end
 end
 
-def get_schedule(line_id)
+def get_next_departure(stop_id, bus_id)
     begin
-        uri = URI("#{@config['stop']['url']}%s:" % line_id )
+        uri = URI("#{@config['stop']['url']}%s:&LineRef=STIF:Line::%s:" % [stop_id, bus_id])
         req = Net::HTTP::Get.new(uri)
+        puts uri
         req['Accept'] = 'application/json'
         req['apikey'] = @config["stop"]["token"]
 
@@ -120,7 +121,7 @@ def update_bus_stops_time
     timearray = Array.new
     @config['stop']['stops'].each {|line|
         begin
-            response = JSON.parse(get_schedule(line['id']))
+            response = JSON.parse(get_next_departure(line['id'], line['bus_id']))
             schedule = response['Siri']['ServiceDelivery']['StopMonitoringDelivery'][0]['MonitoredStopVisit']
         rescue
             next
@@ -129,11 +130,9 @@ def update_bus_stops_time
 
         stop_time = Array.new
         schedule.each {|schedule|
-            if schedule['MonitoredVehicleJourney']['OperatorRef']['value'].match("\\.%s:$" %line ['bus_number'])
-                delay = DateTime.parse(schedule['MonitoredVehicleJourney']['MonitoredCall']['ExpectedDepartureTime']) - now
-                delay_mn = (delay * 24 * 60).to_i
-                stop_time.push( [ delay_mn, schedule['MonitoredVehicleJourney']['MonitoredCall']['DestinationDisplay'][0]['value']])
-            end
+            delay = DateTime.parse(schedule['MonitoredVehicleJourney']['MonitoredCall']['ExpectedDepartureTime']) - now
+            delay_mn = (delay * 24 * 60).to_i
+            stop_time.push( [ delay_mn, schedule['MonitoredVehicleJourney']['MonitoredCall']['DestinationDisplay'][0]['value']])
         }
         if stop_time.length() > 0
             stop_time = stop_time.sort_by { |s| s[0].to_i }

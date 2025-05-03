@@ -7,24 +7,28 @@
             {
                 "id": "28785",
                 "bus_number": "258",
+                "bus_id": "C01248",
                 "bus_color": "red",
                 "extra": "[RER A/E] -"
             },
             {
                 "id": "488598",
                 "bus_number": "259",
+                "bus_id": "C02000",
                 "bus_color": "blue",
                 "extra": "[RER A/E/TER L] -"
             },
             {
                 "id": "26140",
                 "bus_number": "157",
+                "bus_id": "C01180",
                 "bus_color": "purple",
                 "extra": "[RER A] -"
             },
             {
                 "id": "28784",
                 "bus_number": "158",
+                "bus_id": "C01181",
                 "bus_color": "orange",
                 "extra": "[Botanic] -"
             }
