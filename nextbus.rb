@@ -69,6 +69,8 @@ def update_meteo
     wcode = wdata['hourly']['weather_code'][now.hour]
     daynight = daynight(sunrise_d1,sunrise_d2,sunset_d1,sunset_d2, now)
 
+    puts wcode.to_s
+    puts daynight
     curweather.set_text("#{wdata['hourly']['temperature_2m'][now.hour]}°C  #{@weathermap[wcode.to_s][daynight]['description']}")
 
     i = 0
@@ -79,6 +81,8 @@ def update_meteo
         ico_obj = get_object("METEO_IMAGE%d" % [i])
         wcode = wdata['hourly']['weather_code'][now.hour + i]
         daynight = daynight(sunrise_d1,sunrise_d2,sunset_d1,sunset_d2, now + i/24r)
+    puts wcode.to_s
+    puts daynight
         ico_obj.set_from_file(
         "#{File.expand_path(File.dirname(__FILE__))}/images/#{@weathermap[wcode.to_s][daynight]['image']}")
 
@@ -261,7 +265,7 @@ load_ui()
 update_date_time()
 update_meteo()
 update_bus_stops_time()
-update_waterlevel()
+#update_waterlevel()
 led_light()
 
 GLib::Timeout.add(100) do
@@ -286,7 +290,7 @@ end
 
 GLib::Timeout.add(60000) do
     puts "Start Waterlevel update"
-    update_waterlevel()
+    #update_waterlevel()
     puts "End Waterlevel update"
     true
 end
