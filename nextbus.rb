@@ -3,6 +3,7 @@ require "json"
 require "net/http"
 require "date"
 require 'influxdb'
+require "cgi"
 
 @builder
 @config
@@ -157,7 +158,7 @@ def update_bus_stops_time
 
         num_object.set_attributes(attr)
         num_object.set_text("  %d  " % x[0]['bus_number'])
-        dest_object.set_text(" #{x[0]['extra']} #{x[1][0][1]}")
+        dest_object.set_text(" #{x[0]['extra']} #{CGI.unescapeHTML(x[1][0][1])}")
         if x[1][0][0].to_i > 1
             first_stop_obj.set_text("#{x[1][0][0]} mn")
         else
