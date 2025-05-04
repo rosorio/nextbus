@@ -1,10 +1,13 @@
 {
     "stop": {
+        /* https://prim.iledefrance-mobilites.fr/en/apis/idfm-ivtr-requete_unitaire */
         "url":  "https://prim.iledefrance-mobilites.fr/marketplace/stop-monitoring?MonitoringRef=STIF:StopPoint:Q:",
         "token": "",
         
         "stops": [
             {
+                /* https://prim.iledefrance-mobilites.fr/en/jeux-de-donnees/traces-des-lignes-regulieres-de-bus-en-ile-de-france */
+                /* https://prim.iledefrance-mobilites.fr/en/jeux-de-donnees/referentiel-des-lignes?tab=images */
                 "id": "28785",
                 "bus_number": "258",
                 "bus_id": "C01248",
