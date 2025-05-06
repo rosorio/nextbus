@@ -6,7 +6,7 @@
 		},
 		"night": {
 			"description": "Clair",
-			"image": "0.png"
+			"image": "0n.png"
 		}
 	},
 	"1": {
@@ -16,7 +16,7 @@
 		},
 		"night": {
 			"description": "Principalement clair",
-			"image": "1.png"
+			"image": "1n.png"
 		}
 	},
 	"2": {
@@ -26,7 +26,7 @@
 		},
 		"night": {
 			"description": "Partiellement nuageux",
-			"image": "2.png"
+			"image": "2n.png"
 		}
 	},
 	"3": {
