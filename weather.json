@@ -36,7 +36,7 @@
 		},
 		"night": {
 			"description": "Nuageux",
-			"image": "3.png"
+			"image": "3n.png"
 		}
 	},
 	"45": {
@@ -46,17 +46,17 @@
 		},
 		"night": {
 			"description": "Brumeux",
-			"image": "50.png"
+			"image": "50n.png"
 		}
 	},
 	"48": {
 		"day": {
 			"description": "Brouillard givrant",
-			"image": "50.png"
+			"image": "48.png"
 		},
 		"night": {
 			"description": "Brouillard givrant",
-			"image": "50.png"
+			"image": "48n.png"
 		}
 	},
 	"51": {
@@ -66,7 +66,7 @@
 		},
 		"night": {
 			"description": "Bruine légère",
-			"image": "51.png"
+			"image": "51n.png"
 		}
 	},
 	"53": {
@@ -76,7 +76,7 @@
 		},
 		"night": {
 			"description": "Bruine",
-			"image": "53.png"
+			"image": "53n.png"
 		}
 	},
 	"55": {
@@ -86,7 +86,7 @@
 		},
 		"night": {
 			"description": "Forte bruine",
-			"image": "55.png"
+			"image": "55n.png"
 		}
 	},
 	"56": {
@@ -96,7 +96,7 @@
 		},
 		"night": {
 			"description": "Bruine légère verglaçante",
-			"image": "56.png"
+			"image": "56n.png"
 		}
 	},
 	"57": {
@@ -106,7 +106,7 @@
 		},
 		"night": {
 			"description": "Bruine verglaçante",
-			"image": "57.png"
+			"image": "57n.png"
 		}
 	},
 	"61": {
@@ -116,7 +116,7 @@
 		},
 		"night": {
 			"description": "Pluie légère",
-			"image": "61.png"
+			"image": "61n.png"
 		}
 	},
 	"63": {
@@ -126,7 +126,7 @@
 		},
 		"night": {
 			"description": "Pluie",
-			"image": "63.png"
+			"image": "63n.png"
 		}
 	},
 	"65": {
@@ -136,7 +136,7 @@
 		},
 		"night": {
 			"description": "Forte pluie",
-			"image": "65.png"
+			"image": "65n.png"
 		}
 	},
 	"66": {
@@ -146,7 +146,7 @@
 		},
 		"night": {
 			"description": "Pluie légère verglaçante",
-			"image": "66.png"
+			"image": "66n.png"
 		}
 	},
 	"67": {
@@ -156,7 +156,7 @@
 		},
 		"night": {
 			"description": "Pluie verglaçante",
-			"image": "67.png"
+			"image": "67n.png"
 		}
 	},
 	"71": {
@@ -166,7 +166,7 @@
 		},
 		"night": {
 			"description": "Neige légère",
-			"image": "71.png"
+			"image": "71n.png"
 		}
 	},
 	"73": {
@@ -176,7 +176,7 @@
 		},
 		"night": {
 			"description": "Neige",
-			"image": "73.png"
+			"image": "73n.png"
 		}
 	},
 	"75": {
@@ -186,7 +186,7 @@
 		},
 		"night": {
 			"description": "Forte neige",
-			"image": "75.png"
+			"image": "75n.png"
 		}
 	},
 	"77": {
@@ -196,7 +196,7 @@
 		},
 		"night": {
 			"description": "Grains de neige",
-			"image": "77.png"
+			"image": "77n.png"
 		}
 	},
 	"80": {
@@ -206,7 +206,7 @@
 		},
 		"night": {
 			"description": "Averses légères",
-			"image": "80.png"
+			"image": "80n.png"
 		}
 	},
 	"81": {
@@ -216,7 +216,7 @@
 		},
 		"night": {
 			"description": "Averses",
-			"image": "81.png"
+			"image": "81n.png"
 		}
 	},
 	"82": {
@@ -226,7 +226,7 @@
 		},
 		"night": {
 			"description": "Fortes averses",
-			"image": "82.png"
+			"image": "82n.png"
 		}
 	},
 	"85": {
@@ -236,7 +236,7 @@
 		},
 		"night": {
 			"description": "Neige",
-			"image": "85.png"
+			"image": "85n.png"
 		}
 	},
 	"86": {
@@ -246,7 +246,7 @@
 		},
 		"night": {
 			"description": "Neige",
-			"image": "86.png"
+			"image": "86n.png"
 		}
 	},
 	"95": {
@@ -256,7 +256,7 @@
 		},
 		"night": {
 			"description": "Orage",
-			"image": "95.png"
+			"image": "95n.png"
 		}
     },
 	"96": {
@@ -266,7 +266,7 @@
 		},
 		"night": {
 			"description": "Orage et grêle",
-			"image": "96.png"
+			"image": "96n.png"
 	    }
 	},
 	"99": {
@@ -276,7 +276,7 @@
 		},
 		"night": {
 			"description": "Orage et grêle",
-			"image": "99.png"
+			"image": "99n.png"
 		}
 	}
 }
