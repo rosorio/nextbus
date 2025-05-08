@@ -286,7 +286,7 @@ end
 
 GLib::Timeout.add(60000) do
     puts "Start Waterlevel update"
-    #update_waterlevel()
+    update_waterlevel()
     puts "End Waterlevel update"
     true
 end
