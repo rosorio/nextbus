@@ -61,10 +61,12 @@ def update_meteo
         return
     end
 
-    sunrise_d1 = DateTime.parse(wdata['daily']['sunrise'][0])
-    sunrise_d2 = DateTime.parse(wdata['daily']['sunrise'][1])
-    sunset_d1 = DateTime.parse(wdata['daily']['sunset'][0])
-    sunset_d2 = DateTime.parse(wdata['daily']['sunset'][1])
+    time_offset = wdata['timezone_abbreviation']
+
+    sunrise_d1 = DateTime.parse("#{wdata['daily']['sunrise'][0]} #{time_offset}")
+    sunrise_d2 = DateTime.parse("#{wdata['daily']['sunrise'][1]} #{time_offset}")
+    sunset_d1 = DateTime.parse("#{wdata['daily']['sunset'][0]} #{time_offset}")
+    sunset_d2 = DateTime.parse("#{wdata['daily']['sunset'][1]} #{time_offset}")
 
     curweather = get_object("WEATHER")
     wcode = wdata['hourly']['weather_code'][now.hour]
