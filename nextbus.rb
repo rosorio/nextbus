@@ -197,41 +197,13 @@ def update_bus_stops_time
 
 end
 
-def update_waterlevel
-    i = 0
-    one_hours_ago = Time.now - (1000)
-
-    influxdb = InfluxDB::Client.new 'waterlevel', host: "central.home"
-    @config['waterlevel'].each { |wl|
-        mlabel_object = get_object("MLABEL%d" % i)
-        moist_object = get_object("MOIST%d" % i)
-
-        mlabel_object.set_text(wl['label'])
-        puts "query #{wl['label']} ---- "
-
-        points = influxdb.query "SELECT * FROM \"Fineoffset-WH51\" where id = '#{wl['id']}' ORDER BY time DESC LIMIT 1;"
-        if points.count > 0
-            point = points[0]['values'][0];
-            puts "#{Time.parse(point['time'].to_s)} #{one_hours_ago.utc}"
-            if Time.parse(point['time'].to_s) > one_hours_ago
-                moist_object.set_text("#{point['moisture'].to_s}")
-            else
-                moist_object.set_text("DOWN")
-            end
-        else
-            moist_object.set_text("OFF")
-        end
-        i = i + 1
-    }
-end
-
 def load_ui
 
     wfile = File.read("#{File.expand_path(File.dirname(__FILE__))}/weather.json")
     @weathermap = JSON.parse(wfile)
 
     cfg = File.read("#{File.expand_path(File.dirname(__FILE__))}/nextbus.json")
-    @config = JSON.parse(cfg)
+    @config = JSON.parse(cfg, allow_comments: true)
 
     builder_file = "#{File.expand_path(File.dirname(__FILE__))}/nextbus.ui"
 
@@ -263,7 +235,6 @@ load_ui()
 update_date_time()
 update_meteo()
 update_bus_stops_time()
-update_waterlevel()
 led_light()
 
 GLib::Timeout.add(100) do
@@ -283,13 +254,6 @@ GLib::Timeout.add(30000) do
     led_light()
     update_bus_stops_time()
     puts "End Bus update"
-    true
-end
-
-GLib::Timeout.add(60000) do
-    puts "Start Waterlevel update"
-    update_waterlevel()
-    puts "End Waterlevel update"
     true
 end
 
